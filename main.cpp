@@ -31,7 +31,10 @@ float deltaTime = 1.0f;
 
 bool m_jumping = false;
 bool is_Moving = false;
-
+bool is_Moving_Up = false;
+bool is_Moving_Down = false;
+bool is_Moving_Left = false;
+bool is_Moving_Right = false;
 const int WALKING_ANIMATION_FRAMES = 4;
 SDL_Rect gSpriteClips[ WALKING_ANIMATION_FRAMES ];
 
@@ -103,7 +106,7 @@ class Dot
 
 		//Moves the dot
 		void move();
-
+        void animate();
 		//Shows the dot on the screen relative to the camera
 		void render( int camX, int camY );
 
@@ -420,33 +423,52 @@ void Dot::handleEvent( SDL_Event& e )
         //Adjust the velocity
         switch( e.key.keysym.sym )
         {
-            case SDLK_UP: mVelY -= DOT_VEL; break;
-            case SDLK_DOWN: mVelY += DOT_VEL; is_Moving = true; break;
-            case SDLK_LEFT: mVelX -= DOT_VEL; break;
-            case SDLK_RIGHT: mVelX += DOT_VEL; break;
+            case SDLK_UP: mVelY -= DOT_VEL; is_Moving_Up = true;is_Moving_Down = false;is_Moving_Right = false;is_Moving_Left = false;break;
+            case SDLK_DOWN: mVelY += DOT_VEL; is_Moving = true; is_Moving_Down = true;is_Moving_Up = false;is_Moving_Right = false;is_Moving_Left = false;break;
+            case SDLK_LEFT: mVelX -= DOT_VEL;is_Moving_Left = true;is_Moving_Right = false;is_Moving_Up = false;is_Moving_Down = false; break;
+            case SDLK_RIGHT: mVelX += DOT_VEL; is_Moving_Right = true;is_Moving_Up = false; is_Moving_Down = false;is_Moving_Left = false;break;
         }
     }
-    //If a key was released
+    //area of animation change
+    //If a key was released KEYUP
     else if( e.type == SDL_KEYUP && e.key.repeat == 0 )
     {
         //Adjust the velocity
         switch( e.key.keysym.sym )
-        {
+        {    //might need to remove movement because it gets stuck looks like moon walking
             case SDLK_UP: mVelY += DOT_VEL;
               // gDotTexture.loadFromFile( "dot.bmp" );
+              is_Moving_Up = true;
+              is_Moving_Down = false;
+              is_Moving_Right = false;
+              is_Moving_Left = false;
               printf("move up");
                break;
             case SDLK_DOWN: mVelY -= DOT_VEL;
-                 is_Moving = false;
+                // is_Moving = false;
+                is_Moving_Down = true;
+                is_Moving_Up = false;
+                is_Moving_Right = false;
+                is_Moving_Left = false;
                //gDotTexture.loadFromFile( "dot1.bmp" );
                 printf("move down");
                break;
             case SDLK_LEFT: mVelX += DOT_VEL;
+            is_Moving_Left = true;
+            is_Moving_Right = false;
+            is_Moving_Up = false;
+            is_Moving_Down = false;
+
               // gDotTexture.loadFromFile( "dot2.bmp" );
+
               printf("move left");
                break;
             case SDLK_RIGHT: mVelX -= DOT_VEL;
                //gDotTexture.loadFromFile( "dot3.bmp" );
+               is_Moving_Right = true;
+               is_Moving_Up = false;
+               is_Moving_Down = false;
+               is_Moving_Left = false;
                printf("move right");
                break;
             case SDLK_SPACE:  m_jumping = true;
@@ -496,7 +518,19 @@ void Dot::move()
         mPosY -= mVelY;
     }
 }
+void Dot::animate()
+{
+                    gSpriteClips[ 0 ].x =   36;//36
+                    gSpriteClips[ 0 ].y =   33;//3
+                    gSpriteClips[ 0 ].w =  27;//52
+                    gSpriteClips[ 0 ].h = 31;//92
 
+                    gSpriteClips[ 1 ].x =  57;//73
+                    gSpriteClips[ 1 ].y =   33;//3
+                    gSpriteClips[ 1 ].w = 27;//57
+                    gSpriteClips[ 1 ].h = 31;//92
+
+}
 void Dot::render( int camX, int camY )
 {
 
@@ -587,13 +621,13 @@ bool loadMedia()
 	 else
     {
         //Set sprite clips
-        gSpriteClips[ 0 ].x =   36;//0
-        gSpriteClips[ 0 ].y =   2;//3
+        gSpriteClips[ 0 ].x =   36;//36
+        gSpriteClips[ 0 ].y =   2;//2
         gSpriteClips[ 0 ].w =  27;//52
         gSpriteClips[ 0 ].h = 31;//92
 
-        gSpriteClips[ 1 ].x =  66;//73
-        gSpriteClips[ 1 ].y =   2;//3
+        gSpriteClips[ 1 ].x =  66;//66
+        gSpriteClips[ 1 ].y =   2;//2
         gSpriteClips[ 1 ].w = 27;//57
         gSpriteClips[ 1 ].h = 31;//92
 
@@ -681,6 +715,65 @@ int main( int argc, char* args[] )
 					//Handle input for the dot
 					dot.handleEvent( e );
 				}
+                if(is_Moving_Up == true)
+                    {
+                    gSpriteClips[ 0 ].x =   36;//36
+                    gSpriteClips[ 0 ].y =   34;//3
+                    gSpriteClips[ 0 ].w =  27;//52
+                    gSpriteClips[ 0 ].h = 31;//92
+
+                    gSpriteClips[ 1 ].x =  67;//73
+                    gSpriteClips[ 1 ].y =   34;//3
+                    gSpriteClips[ 1 ].w = 27;//57
+                    gSpriteClips[ 1 ].h = 31;//92
+
+                }
+                if(is_Moving_Down)
+                {
+                    gSpriteClips[ 0 ].x =   36;//36
+        gSpriteClips[ 0 ].y =   2;//2
+        gSpriteClips[ 0 ].w =  27;//52
+        gSpriteClips[ 0 ].h = 31;//92
+
+        gSpriteClips[ 1 ].x =  66;//66
+        gSpriteClips[ 1 ].y =   2;//2
+        gSpriteClips[ 1 ].w = 27;//57
+        gSpriteClips[ 1 ].h = 31;//92
+                }
+                if(is_Moving_Right == true)
+                    {
+                    gSpriteClips[ 0 ].x =   36;//36
+                    gSpriteClips[ 0 ].y =   66;//3
+                    gSpriteClips[ 0 ].w =  27;//52
+                    gSpriteClips[ 0 ].h = 31;//92
+
+                    gSpriteClips[ 1 ].x =  66;//73
+                    gSpriteClips[ 1 ].y =   66;//3
+                    gSpriteClips[ 1 ].w = 27;//57
+                    gSpriteClips[ 1 ].h = 31;//92
+
+                }
+                if(is_Moving_Left == true)
+                    {
+                    gSpriteClips[ 0 ].x =   35;//36
+                    gSpriteClips[ 0 ].y =   97;//3
+                    gSpriteClips[ 0 ].w =  27;//52
+                    gSpriteClips[ 0 ].h = 31;//92
+
+                    gSpriteClips[ 1 ].x =  67;//73
+                    gSpriteClips[ 1 ].y =   97;//3
+                    gSpriteClips[ 1 ].w = 27;//57
+                    gSpriteClips[ 1 ].h = 31;//92
+
+                }
+
+
+
+
+
+
+
+
 
 				//Move the dot
 				dot.move();
