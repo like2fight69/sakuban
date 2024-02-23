@@ -579,7 +579,7 @@ bool loadMedia()
         }
 
 	//Load dot texture
-	if( !gDotTexture.loadFromFile( "knight1.png" ) )//foo.bmp
+	if( !gDotTexture.loadFromFile( "image.png" ) )//foo.bmp
 	{
 		printf( "Failed to load dot texture!\n" );
 		success = false;
@@ -587,20 +587,20 @@ bool loadMedia()
 	 else
     {
         //Set sprite clips
-        gSpriteClips[ 0 ].x =   0;
-        gSpriteClips[ 0 ].y =   3;//0
-        gSpriteClips[ 0 ].w =  52;//52
-        gSpriteClips[ 0 ].h = 92;//92
+        gSpriteClips[ 0 ].x =   36;//0
+        gSpriteClips[ 0 ].y =   2;//3
+        gSpriteClips[ 0 ].w =  27;//52
+        gSpriteClips[ 0 ].h = 31;//92
 
-        gSpriteClips[ 1 ].x =  73;//64
-        gSpriteClips[ 1 ].y =   3;
-        gSpriteClips[ 1 ].w =  57;//55
-        gSpriteClips[ 1 ].h = 92;
+        gSpriteClips[ 1 ].x =  66;//73
+        gSpriteClips[ 1 ].y =   2;//3
+        gSpriteClips[ 1 ].w = 27;//57
+        gSpriteClips[ 1 ].h = 31;//92
 
-        gSpriteClips[ 2 ].x = 155;//128
+       /* gSpriteClips[ 2 ].x = 155;//128
         gSpriteClips[ 2 ].y =   1;//0
         gSpriteClips[ 2 ].w =  52;//54
-        gSpriteClips[ 2 ].h = 92;
+        gSpriteClips[ 2 ].h = 92;*/
         /*
         gSpriteClips[ 3 ].x = 196;//196
         gSpriteClips[ 3 ].y =   0;
@@ -728,7 +728,7 @@ int main( int argc, char* args[] )
 				++frame;
                 if(is_Moving == true){
                 //Cycle animation
-                if( frame / 3 >= WALKING_ANIMATION_FRAMES )//3
+                if( frame / 2 >= WALKING_ANIMATION_FRAMES )//3
                 {   //SDL_Delay(100);
 
                     frame = 0;//0
