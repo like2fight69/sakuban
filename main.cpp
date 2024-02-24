@@ -76,7 +76,7 @@ class LTexture
 		//Gets image dimensions
 		int getWidth();
 		int getHeight();
-
+        void setSize(int w,int h);
 	private:
 		//The actual hardware texture
 		SDL_Texture* mTexture;
@@ -91,8 +91,8 @@ class Dot
 {
     public:
 		//The dimensions of the dot
-		static const int DOT_WIDTH = 20;
-		static const int DOT_HEIGHT = 20;
+		static const int DOT_WIDTH = 40;
+		static const int DOT_HEIGHT = 40;
 
 		//Maximum axis velocity of the dot
 		static const int DOT_VEL = 10;
@@ -325,7 +325,11 @@ bool LTexture::loadFromRenderedText( std::string textureText, SDL_Color textColo
 	return mTexture != NULL;
 }
 #endif
-
+void LTexture::setSize(int w,int h)
+{
+    w = mWidth;
+    h = mHeight;
+}
 void LTexture::free()
 {
 	//Free texture if it exists
@@ -423,7 +427,7 @@ void Dot::handleEvent( SDL_Event& e )
     {
         //Adjust the velocity
         switch( e.key.keysym.sym )
-        {
+        {   //mVelY -= DOT_VEL;
             case SDLK_UP: mVelY -= DOT_VEL; is_Moving_Up = true;is_Moving_Down = false;is_Moving_Right = false;is_Moving_Left = false;break;
             case SDLK_DOWN: mVelY += DOT_VEL; is_Moving = true; is_Moving_Down = true;is_Moving_Up = false;is_Moving_Right = false;is_Moving_Left = false;break;
             case SDLK_LEFT: mVelX -= DOT_VEL;is_Moving_Left = true;is_Moving_Right = false;is_Moving_Up = false;is_Moving_Down = false; break;
@@ -535,7 +539,7 @@ void Dot::animate()
 void Dot::render( int camX, int camY )
 {
 
-	gDotTexture.render( mPosX - camX, mPosY - camY );
+	//gDotTexture.render( mPosX - camX, mPosY - camY );
 	gBoxTexture.render(mPosX - camX, mPosY - camY);
 }
 
@@ -784,7 +788,7 @@ int main( int argc, char* args[] )
 
 				//Move the dot
 				dot.move();
-
+               // box.move();
 				//Center the camera over the dot
 				camera.x = ( dot.getPosX() + Dot::DOT_WIDTH / 2 ) - SCREEN_WIDTH / 2;
 				camera.y = ( dot.getPosY() + Dot::DOT_HEIGHT / 2 ) - SCREEN_HEIGHT / 2;
@@ -812,16 +816,18 @@ int main( int argc, char* args[] )
 				SDL_RenderClear( gRenderer );
 
 				//Render background
-				gBGTexture.render( 0, 0, &camera );
+				gBGTexture.render( 0, 0, &camera );//&camera
 				//draw box randomly within the level
-                gBoxTexture.render(0,0,NULL);
+                //gBoxTexture.render(0,0,NULL);
 				//Render objects
+                box.render(camera.x,camera.y);
 				//dot.render( camera.x, camera.y );
                                 //platform.render(camera.x,camera.y);
 
 
                                 SDL_Rect* currentClip = &gSpriteClips[ frame / 4 ];//4
                 gDotTexture.render( ( SCREEN_WIDTH - currentClip->w ) / 2, ( SCREEN_HEIGHT - currentClip->h ) / 2, currentClip );
+                // gBoxTexture.render(( SCREEN_WIDTH - currentClip->w ) / 2, ( SCREEN_HEIGHT - currentClip->h ) / 2, currentClip);
               SDL_Delay(100);
 
                                 //Update screen
