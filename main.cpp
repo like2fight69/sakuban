@@ -6,11 +6,11 @@
 #include <string>
 
 /*NOTES
-Collide with platform:
+Collide with box:
 Change sprite on button down:DONE
-Animate sprite:
+Animate sprite:DONE
 seperate idle sprite form walking sprites
-
+add box sprite:DONE
 */
 
 //The dimensions of the level
@@ -161,9 +161,9 @@ class Platform
 
 
 Platform platform;
-//test
+//rename Dot with entity
  Dot dot;
-
+ Dot box;
 
 //Starts up SDL and creates window
 bool init();
@@ -185,6 +185,7 @@ LTexture gDotTexture;
 LTexture gBGTexture;
 LTexture gPlatformTexture;
 LTexture gSpriteSheetTexture;
+LTexture gBoxTexture;
 //test
 bool check_collision( SDL_Rect A, SDL_Rect B )
 {
@@ -535,6 +536,7 @@ void Dot::render( int camX, int camY )
 {
 
 	gDotTexture.render( mPosX - camX, mPosY - camY );
+	gBoxTexture.render(mPosX - camX, mPosY - camY);
 }
 
 int Dot::getPosX()
@@ -611,7 +613,12 @@ bool loadMedia()
                 printf( "Failed to load dot texture!\n" );
                 success = false;
         }
-
+    //load box
+     if( !gBoxTexture.loadFromFile( "box.png" ) )
+        {
+                printf( "Failed to load dot texture!\n" );
+                success = false;
+        }
 	//Load dot texture
 	if( !gDotTexture.loadFromFile( "image.png" ) )//foo.bmp
 	{
@@ -660,7 +667,7 @@ void close()
 	gDotTexture.free();
 	gBGTexture.free();
         gPlatformTexture.free();
-
+      gBoxTexture.free();
         //Destroy window
 	SDL_DestroyRenderer( gRenderer );
 	SDL_DestroyWindow( gWindow );
@@ -752,7 +759,7 @@ int main( int argc, char* args[] )
                     gSpriteClips[ 1 ].w = 27;//57
                     gSpriteClips[ 1 ].h = 31;//92
 
-                }
+                }//fix left right movement sprite
                 if(is_Moving_Left == true)
                     {
                     gSpriteClips[ 0 ].x =   35;//36
@@ -806,7 +813,8 @@ int main( int argc, char* args[] )
 
 				//Render background
 				gBGTexture.render( 0, 0, &camera );
-
+				//draw box randomly within the level
+                gBoxTexture.render(0,0,NULL);
 				//Render objects
 				//dot.render( camera.x, camera.y );
                                 //platform.render(camera.x,camera.y);
