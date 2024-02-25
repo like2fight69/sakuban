@@ -109,7 +109,7 @@ class Dot
         void animate();
 		//Shows the dot on the screen relative to the camera
 		void render( int camX, int camY );
-
+        bool check_Collision(Dot A,Dot B);
 		//Position accessors
 		int getPosX();
 		int getPosY();
@@ -187,8 +187,10 @@ LTexture gPlatformTexture;
 LTexture gSpriteSheetTexture;
 LTexture gBoxTexture;
 //test
-bool check_collision( SDL_Rect A, SDL_Rect B )
+/*
+bool check_collision( Dot A, Dot B )
 {
+
     //The sides of the rectangles
     int leftA, leftB;
     int rightA, rightB;
@@ -196,16 +198,16 @@ bool check_collision( SDL_Rect A, SDL_Rect B )
     int bottomA, bottomB;
 
     //Calculate the sides of rect A
-    leftA = A.x;
-    rightA = A.x + A.w;
-    topA = A.y;
-    bottomA = A.y + A.h;
+    leftA = A.mPosX;
+    rightA = A.mPosX + A.DOT_WIDTH;
+    topA = A.mPosY;
+    bottomA = A.mPosY + A.DOT_HEIGHT;
 
     //Calculate the sides of rect B
-    leftB = B.x;
-    rightB = B.x + B.w;
-    topB = B.y;
-    bottomB = B.y + B.h;
+    leftB = B.mPosX;
+    rightB = B.mPosX + B.DOT_WIDTH;
+    topB = B.mPosY;
+    bottomB = B.mPosY + B.DOT_HEIGHT;
 //If any of the sides from A are outside of B
     if( bottomA <= topB )
     {
@@ -230,7 +232,7 @@ bool check_collision( SDL_Rect A, SDL_Rect B )
     //If none of the sides from A are outside B
     return true;
 }
-
+*/
 
 
 //test
@@ -419,7 +421,50 @@ Dot::Dot()
     mVelX = 0;
     mVelY = 0;
 }
+bool Dot::check_Collision(Dot A, Dot B)
+{
+//The sides of the rectangles
+    int leftA, leftB;
+    int rightA, rightB;
+    int topA, topB;
+    int bottomA, bottomB;
 
+    //Calculate the sides of rect A
+    leftA = A.mPosX;
+    rightA = A.mPosX + A.DOT_WIDTH;
+    topA = A.mPosY;
+    bottomA = A.mPosY + A.DOT_HEIGHT;
+
+    //Calculate the sides of rect B
+    leftB = B.mPosX;
+    rightB = B.mPosX + B.DOT_WIDTH;
+    topB = B.mPosY;
+    bottomB = B.mPosY + B.DOT_HEIGHT;
+//If any of the sides from A are outside of B
+    if( bottomA <= topB )
+    {
+        return false;
+    }
+
+    if( topA >= bottomB )
+    {
+        return false;
+    }
+
+    if( rightA <= leftB )
+    {
+        return false;
+    }
+
+    if( leftA >= rightB )
+    {
+        return false;
+    }
+
+    //If none of the sides from A are outside B
+    return true;
+
+}
 void Dot::handleEvent( SDL_Event& e )
 {
     //If a key was pressed
@@ -503,6 +548,11 @@ void Dot::move()
       deltaTime = maxFallSpeed;
    }
 }*/
+  if(check_Collision(dot,box))
+  {
+      printf("collision detected");
+      //mPosX -= mVelX;
+  }
     //Move the dot left or right
     mPosX += mVelX;
 
@@ -538,9 +588,12 @@ void Dot::animate()
 }
 void Dot::render( int camX, int camY )
 {
-
+     //try tagging objects
 	//gDotTexture.render( mPosX - camX, mPosY - camY );
+	box.mPosX = 300;
+	box.mPosY = 250;
 	gBoxTexture.render(mPosX - camX, mPosY - camY);
+
 }
 
 int Dot::getPosX()
