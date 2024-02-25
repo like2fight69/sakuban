@@ -109,15 +109,15 @@ class Dot
         void animate();
 		//Shows the dot on the screen relative to the camera
 		void render( int camX, int camY );
-        bool check_Collision(Dot A,Dot B);
+        //bool check_Collision(Dot A,Dot B);
 		//Position accessors
 		int getPosX();
 		int getPosY();
                 bool isAffectedByGravity;
-
+int mPosX, mPosY;
     private:
 		//The X and Y offsets of the dot
-		int mPosX, mPosY;
+		//int mPosX, mPosY;
 
 		//The velocity of the dot
 		int mVelX, mVelY;
@@ -187,7 +187,7 @@ LTexture gPlatformTexture;
 LTexture gSpriteSheetTexture;
 LTexture gBoxTexture;
 //test
-/*
+
 bool check_collision( Dot A, Dot B )
 {
 
@@ -232,7 +232,7 @@ bool check_collision( Dot A, Dot B )
     //If none of the sides from A are outside B
     return true;
 }
-*/
+
 
 
 //test
@@ -414,13 +414,14 @@ int Platform::getPosY()
 Dot::Dot()
 {
     //Initialize the offsets
-    mPosX = 0;
-    mPosY = 100;
+    //mPosX = 0;
+   // mPosY = 100;
 
     //Initialize the velocity
     mVelX = 0;
     mVelY = 0;
 }
+/*
 bool Dot::check_Collision(Dot A, Dot B)
 {
 //The sides of the rectangles
@@ -464,7 +465,7 @@ bool Dot::check_Collision(Dot A, Dot B)
     //If none of the sides from A are outside B
     return true;
 
-}
+}*/
 void Dot::handleEvent( SDL_Event& e )
 {
     //If a key was pressed
@@ -500,6 +501,7 @@ void Dot::handleEvent( SDL_Event& e )
                 is_Moving_Up = false;
                 is_Moving_Right = false;
                 is_Moving_Left = false;
+
                //gDotTexture.loadFromFile( "dot1.bmp" );
                 printf("move down");
                break;
@@ -548,11 +550,7 @@ void Dot::move()
       deltaTime = maxFallSpeed;
    }
 }*/
-  if(check_Collision(dot,box))
-  {
-      printf("collision detected");
-      //mPosX -= mVelX;
-  }
+
     //Move the dot left or right
     mPosX += mVelX;
 
@@ -590,8 +588,9 @@ void Dot::render( int camX, int camY )
 {
      //try tagging objects
 	//gDotTexture.render( mPosX - camX, mPosY - camY );
-	box.mPosX = 300;
-	box.mPosY = 250;
+
+	//box.mPosX = 300;
+	//box.mPosY = 250;
 	gBoxTexture.render(mPosX - camX, mPosY - camY);
 
 }
@@ -737,7 +736,8 @@ void close()
 }
 
 int main( int argc, char* args[] )
-{
+{       box.mPosX = 300;
+	    box.mPosY = 250;
 	//Start up SDL and create window
 	if( !init() )
 	{
@@ -803,7 +803,13 @@ int main( int argc, char* args[] )
         gSpriteClips[ 1 ].y =   2;//2
         gSpriteClips[ 1 ].w = 27;//57
         gSpriteClips[ 1 ].h = 31;//92
+           if(check_collision(dot,box)){
+                    //gBoxTexture.free();
+                    box.mPosY += 10;
                 }
+
+
+          }
                 if(is_Moving_Right == true)
                     {
                     gSpriteClips[ 0 ].x =   36;//36
@@ -841,6 +847,7 @@ int main( int argc, char* args[] )
 
 				//Move the dot
 				dot.move();
+
                // box.move();
 				//Center the camera over the dot
 				camera.x = ( dot.getPosX() + Dot::DOT_WIDTH / 2 ) - SCREEN_WIDTH / 2;
@@ -871,9 +878,10 @@ int main( int argc, char* args[] )
 				//Render background
 				gBGTexture.render( 0, 0, &camera );//&camera
 				//draw box randomly within the level
-                //gBoxTexture.render(0,0,NULL);
+               // gBoxTexture.render(0,0,NULL);
 				//Render objects
                 box.render(camera.x,camera.y);
+
 				//dot.render( camera.x, camera.y );
                                 //platform.render(camera.x,camera.y);
 
