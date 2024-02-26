@@ -32,7 +32,7 @@ float deltaTime = 1.0f;
 bool m_jumping = false;
 bool is_Moving = false;
 bool is_Moving_Up = false;
-bool is_Moving_Down = false;
+bool is_Moving_Down = false;//false
 bool is_Moving_Left = false;
 bool is_Moving_Right = false;
 const int WALKING_ANIMATION_FRAMES = 4;
@@ -475,9 +475,9 @@ void Dot::handleEvent( SDL_Event& e )
         switch( e.key.keysym.sym )
         {   //mVelY -= DOT_VEL;
             case SDLK_UP: mVelY -= DOT_VEL; is_Moving_Up = true;is_Moving_Down = false;is_Moving_Right = false;is_Moving_Left = false;break;
-            case SDLK_DOWN: mVelY += DOT_VEL; is_Moving = true; is_Moving_Down = true;is_Moving_Up = false;is_Moving_Right = false;is_Moving_Left = false;break;
+            case SDLK_DOWN: mVelY += DOT_VEL; is_Moving_Down = true;is_Moving_Up = false;is_Moving_Right = false;is_Moving_Left = false;break;
             case SDLK_LEFT: mVelX -= DOT_VEL;is_Moving_Left = true;is_Moving_Right = false;is_Moving_Up = false;is_Moving_Down = false; break;
-            case SDLK_RIGHT: mVelX += DOT_VEL; is_Moving_Right = true;is_Moving_Up = false; is_Moving_Down = false;is_Moving_Left = false;break;
+            case SDLK_RIGHT: mVelX += DOT_VEL;is_Moving_Right = true;is_Moving_Up = false; is_Moving_Down = false;is_Moving_Left = false;break;
         }
     }
     //area of animation change
@@ -489,27 +489,27 @@ void Dot::handleEvent( SDL_Event& e )
         {    //might need to remove movement because it gets stuck looks like moon walking
             case SDLK_UP: mVelY += DOT_VEL;
               // gDotTexture.loadFromFile( "dot.bmp" );
-              is_Moving_Up = true;
+              /*is_Moving_Up = true;
               is_Moving_Down = false;
               is_Moving_Right = false;
-              is_Moving_Left = false;
+              is_Moving_Left = false;*/
               printf("move up");
                break;
             case SDLK_DOWN: mVelY -= DOT_VEL;
                 // is_Moving = false;
-                is_Moving_Down = true;
+               /* is_Moving_Down = true;
                 is_Moving_Up = false;
                 is_Moving_Right = false;
-                is_Moving_Left = false;
+                is_Moving_Left = false;*/
 
                //gDotTexture.loadFromFile( "dot1.bmp" );
                 printf("move down");
                break;
             case SDLK_LEFT: mVelX += DOT_VEL;
-            is_Moving_Left = true;
+            /*is_Moving_Left = true;
             is_Moving_Right = false;
             is_Moving_Up = false;
-            is_Moving_Down = false;
+            is_Moving_Down = false;*/
 
               // gDotTexture.loadFromFile( "dot2.bmp" );
 
@@ -517,10 +517,10 @@ void Dot::handleEvent( SDL_Event& e )
                break;
             case SDLK_RIGHT: mVelX -= DOT_VEL;
                //gDotTexture.loadFromFile( "dot3.bmp" );
-               is_Moving_Right = true;
+              /* is_Moving_Right = true;
                is_Moving_Up = false;
                is_Moving_Down = false;
-               is_Moving_Left = false;
+               is_Moving_Left = false;*/
                printf("move right");
                break;
             case SDLK_SPACE:  m_jumping = true;
@@ -736,8 +736,10 @@ void close()
 }
 
 int main( int argc, char* args[] )
-{       box.mPosX = 300;
+{       box.mPosX = 340;
 	    box.mPosY = 250;
+	    dot.mPosX = 300;
+	    dot.mPosY = 200;
 	//Start up SDL and create window
 	if( !init() )
 	{
@@ -791,6 +793,11 @@ int main( int argc, char* args[] )
                     gSpriteClips[ 1 ].w = 27;//57
                     gSpriteClips[ 1 ].h = 31;//92
 
+                    if(check_collision(dot,box)){
+                    //gBoxTexture.free();
+                    box.mPosY -= 10;
+                }
+
                 }
                 if(is_Moving_Down)
                 {
@@ -822,6 +829,11 @@ int main( int argc, char* args[] )
                     gSpriteClips[ 1 ].w = 27;//57
                     gSpriteClips[ 1 ].h = 31;//92
 
+                    if(check_collision(dot,box)){
+                    //gBoxTexture.free();
+                    box.mPosX += 10;
+                }
+
                 }//fix left right movement sprite
                 if(is_Moving_Left == true)
                     {
@@ -835,6 +847,10 @@ int main( int argc, char* args[] )
                     gSpriteClips[ 1 ].w = 27;//57
                     gSpriteClips[ 1 ].h = 31;//92
 
+                    if(check_collision(dot,box)){
+                    //gBoxTexture.free();
+                    box.mPosX -= 10;
+                }
                 }
 
 
@@ -889,12 +905,12 @@ int main( int argc, char* args[] )
                                 SDL_Rect* currentClip = &gSpriteClips[ frame / 4 ];//4
                 gDotTexture.render( ( SCREEN_WIDTH - currentClip->w ) / 2, ( SCREEN_HEIGHT - currentClip->h ) / 2, currentClip );
                 // gBoxTexture.render(( SCREEN_WIDTH - currentClip->w ) / 2, ( SCREEN_HEIGHT - currentClip->h ) / 2, currentClip);
-              SDL_Delay(100);
+              SDL_Delay(60);//35
 
                                 //Update screen
 				SDL_RenderPresent( gRenderer );
 				++frame;
-                if(is_Moving == true){
+                //if(is_Moving == true){
                 //Cycle animation
                 if( frame / 2 >= WALKING_ANIMATION_FRAMES )//3
                 {   //SDL_Delay(100);
@@ -902,10 +918,10 @@ int main( int argc, char* args[] )
                     frame = 0;//0
                 }
 
-		  }//moving
-		  else{
-		    frame = 5;//5
-		  }
+		  //}//moving
+		 // else{
+		   // frame = 5;//5
+		 //}
 
 			}
 		}
